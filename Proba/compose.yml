@@ -1,0 +1,52 @@
+services:
+  web3:
+    build: apache
+    ports:
+      - 80:80
+    volumes:
+      - ./apache/test1.conf:/etc/apache2/sites-enabled/test1.conf
+      - ./html:/web
+      - ./doc:/app/doc
+    networks:
+      redeapache:
+        aliases:
+          - sitio1.lan
+          - www.sitio1.lan
+
+    develop:
+      watch:
+        - path: ./apache/test1.conf
+          action: restart
+
+  cliente:
+    build: cliente
+    hostname : cliente
+    networks:
+      - redeapache
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+
+networks:
+  redeapache:
+
+
+
+
+
+
+
+
+
+    # weborixinal:
+  #   image: httpd:2.4
+  #   ports:
+  #     - 8001:80
+    
+
+  # web2:
+  #   image: bitnami/apache
+  #   ports:
+  #     - 8080:8080
