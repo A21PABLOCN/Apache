@@ -1,0 +1,15 @@
+AuthType Basic
+AuthName "Solo Invitacion"
+AuthBasicProvider file
+AuthUserFile "/opt/web/omeusitio.lan/.htcontas"
+AuthGroupFile "/opt/web/omeusitio.lan/.htgrupos"
+<RequireAny>
+    Require user manolo
+    <RequireAll>
+        Require group directivos
+        Require group accionistas
+        <RequireNone>
+            Require group temporais
+        </RequireNone>
+    </RequireAll>
+</RequireAny>

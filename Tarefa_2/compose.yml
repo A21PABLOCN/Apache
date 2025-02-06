@@ -1,0 +1,55 @@
+services:
+  web3:
+    build: apache
+    ports:
+      - 80:80
+    volumes:
+      - ./apache/pablocn.conf:/etc/apache2/sites-enabled/pablocn.conf
+      - ./pablocn.lan:/opt/web/pablocn.lan
+      - ./apache/omeusitio.conf:/etc/apache2/sites-enabled/omeusitio.conf
+      - ./omeusitio.lan:/opt/web/omeusitio.lan
+
+    networks:
+      redeapache:
+        aliases:
+          - www.pablocn.lan
+          - pablocn.lan
+          - eq1.pablocn.lan
+          - www.omeusitio.lan
+
+    develop:
+      watch:
+        - path: ./apache/pablocn.conf
+          action: restart
+
+        - path: ./apache/omeusitio.conf
+          action: restart
+
+  cliente:
+    build: cliente
+    hostname : cliente
+    networks:
+      - redeapache
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+  cliente2:
+    build: cliente
+    hostname : cliente2
+    # environment:
+    #   - DISPLAY=${DISPLAY}
+    # volumes:
+    #   - /tmp/.X11-unix:/tmp/.X11-unix
+
+networks:
+  redeapache:
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+        # - subnet: 192.168.58.128/25
+
+
+
+
