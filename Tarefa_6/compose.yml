@@ -1,0 +1,92 @@
+services:
+  web3:
+    build: apache
+    hostname : apa1
+    ports:
+      - 80:80
+    volumes:
+      - ./apache/sitio.conf:/etc/apache2/sites-enabled/sitio.conf
+      - ./sitio.lan:/opt/web/sitio.lan
+
+    networks:
+      redeapache:
+        aliases:
+          - www.sitio.lan
+          - sitio.lan
+          - eq1.sitio.lan
+
+    develop:
+      watch:
+        - path: ./apache/sitio.conf
+          action: restart
+
+  web4:
+    build: apache
+    hostname : apa2
+    ports:
+      - 8000:80
+    volumes:
+      - ./apache/sitio.conf:/etc/apache2/sites-enabled/sitio.conf
+      - ./sitio.lan:/opt/web/sitio.lan
+
+    networks:
+      redeapache:
+        aliases:
+          - www.sitio.lan
+          - sitio.lan
+          - eq1.sitio.lan
+
+    develop:
+      watch:
+        - path: ./apache/sitio.conf
+          action: restart
+
+  nginx:
+    build: nginx
+    hostname : nginx
+    ports:
+      - 8001:80
+    volumes:
+      - ./nginx/default:/etc/nginx/sites-enabled/default
+
+    networks:
+      redeapache:
+      redenginx:
+        aliases:
+          - www.sitio.lan
+          - sitio.lan
+          - eq1.sitio.lan
+      
+
+  cliente:
+    build: cliente
+    hostname : cliente
+    networks:
+      - redenginx
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+  cliente2:
+    build: cliente
+    hostname : cliente2
+    # environment:
+    #   - DISPLAY=${DISPLAY}
+    # volumes:
+    #   - /tmp/.X11-unix:/tmp/.X11-unix
+
+networks:
+  redeapache:
+    ipam:
+      config:
+        - subnet: 192.168.57.0/24
+
+  redenginx:
+    ipam:
+      config:
+        - subnet: 192.168.58.0/24
+
+
+
+

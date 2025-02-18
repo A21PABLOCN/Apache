@@ -1,0 +1,14 @@
+upstream myapp1 {
+        server apa1:80;
+        server apa2:80;
+    }
+
+    server {
+		server_name sitio.lan www.sitio.lan;
+        listen 80;
+
+        location / {
+            proxy_pass http://myapp1;
+			proxy_set_header Host $host;
+        }
+	}
